@@ -1,7 +1,7 @@
 # nodejs pm2 테스트 코드
 
 ## 참고
-
+[없어진 라인 기술 블로그](https://webcache.googleusercontent.com/search?q=cache:nuCNbmlRtEEJ:https://engineering.linecorp.com/ko/blog/pm2-nodejs/+&cd=4&hl=ko&ct=clnk&gl=kr)
 
 ## 명령어
 ``데몬화 후 모니터링``
@@ -112,7 +112,7 @@ app.get('/', (req, res) => {
 
 // # 서버 시작
 app.listen(port, () => {
-  process.sned('ready'); // ready 이벤트 발생으로 새로운 프로세스로 교체한다.
+  process.send('ready'); // ready 이벤트 발생으로 새로운 프로세스로 교체한다.
   console.log('server start');
 });
 

@@ -28,7 +28,7 @@ app.use(Express.static(__dirname + "/static"));
 
 // ===== 서버 시작
 app.listen(port, () => {
-  process.sned('ready'); // ready 이벤트 발생으로 새로운 프로세스로 교체한다.
+  process.send('ready'); // ready 이벤트 발생으로 새로운 프로세스로 교체한다.
   console.log(`server listen ${port}`);
 });
 
