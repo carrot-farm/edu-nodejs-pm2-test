@@ -2,37 +2,51 @@
 
 ## 참고
 [없어진 라인 기술 블로그](https://webcache.googleusercontent.com/search?q=cache:nuCNbmlRtEEJ:https://engineering.linecorp.com/ko/blog/pm2-nodejs/+&cd=4&hl=ko&ct=clnk&gl=kr)
+[명령어](https://km0830.tistory.com/26)
 
 ## 명령어
-``데몬화 후 모니터링``
+**프로세스 시작**
 ```shell
 $ pm2 start app.js
 ```
 
-``설정파일 실행``
+**설정파일 실행**
 ```shell
 $ pm2 start ecosystem.config.js
 ```
 
-``프로세스 간략 상태표시``
+**환경 변수 설정 후 시작**
+* ecosystem.config.js 에 설정 후 다음 커맨드
+* development 환경
+```shell
+$ pm2 start ecosystem.config.js
+```
+* production 환경
+```shell
+$ pm2 start ecosystem.config.js env-production
+```
+
+**프로세스 간략 상태표시**
 ```shell
 $ pm2 list
 ```
 
-``프로세스 5개 늘리기``
+**프로세스 5개 늘리기**
 ```shell
 $ pm2 scale app +5
 ```
 
-``프로세스 4개만 실행하기``
+**프로세스 4개만 실행하기**
 ```shell
 $ pm2 scale app 4
 ```
 
-``프로세스 재시작``
+**프로세스 재시작**
 ```shell
-$ pm2 reload
+$ pm2 reload app
 ```
+
+
 
 ## 프로세스 재시작 로직
 * 프로세스 10개가 실행되고 있다고 가정.
@@ -77,16 +91,25 @@ $ pm2 reload
 ## 코드
 ```javascript
 // ===== ecosystem.config.js
-moduel.exports == {
-  apps : [
+module.exports = {
+  apps: [
     {
       name: 'app', // app 이름.
-      script: './app.js', // 실행 스크립트
+      script: './index.js', // 실행 스크립트
       instance: 0, // cpu 갯수 만큼 인스턴스 실행
       exec_mode: 'cluster', // 클러스터 모드
       wait_ready: true, // 프로세스 종료 후 wait 이벤트가 발생하기 까지 기다린다.
+      watch: true, // 파일이 변경되면 자동을 재실행.
       listen_timeout: 50000, // wait_ready 시 대기시간.
       kill_timeout: 5000, // SIGKILL 시 대기시간.
+      env: { // 개발 환경시 적용될 설정 지정.
+        "NODE_ENV" : "development",
+        "NODE_PATH": "src",
+      },
+      env_production: { // 배포 환경 설정
+        "NODE_ENV" : "production",
+        "NODE_PATH": "src",
+      }
     }
   ]
 };
