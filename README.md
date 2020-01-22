@@ -1,51 +1,20 @@
 # nodejs pm2 테스트 코드
 
 ## 참고
+[공홈](https://pm2.keymetrics.io/)
 [없어진 라인 기술 블로그](https://webcache.googleusercontent.com/search?q=cache:nuCNbmlRtEEJ:https://engineering.linecorp.com/ko/blog/pm2-nodejs/+&cd=4&hl=ko&ct=clnk&gl=kr)
 [명령어](https://km0830.tistory.com/26)
+[운영과 배포 1](https://fkkmemi.github.io/nembv/nembv-21-deploy-web/)
+[운영과 배포 2](https://fkkmemi.github.io/nemv/nemv-035-pm2-deploy/)
 
-## 명령어
-**프로세스 시작**
-```shell
-$ pm2 start app.js
-```
 
-**설정파일 실행**
-```shell
-$ pm2 start ecosystem.config.js
-```
-
-**환경 변수 설정 후 시작**
-* ecosystem.config.js 에 설정 후 다음 커맨드
-* development 환경
-```shell
-$ pm2 start ecosystem.config.js
-```
-* production 환경
-```shell
-$ pm2 start ecosystem.config.js env-production
-```
-
-**프로세스 간략 상태표시**
-```shell
-$ pm2 list
-```
-
-**프로세스 5개 늘리기**
-```shell
-$ pm2 scale app +5
-```
-
-**프로세스 4개만 실행하기**
-```shell
-$ pm2 scale app 4
-```
-
-**프로세스 재시작**
-```shell
-$ pm2 reload app
-```
-
+## 목차
+* [시작프로그램 등록](./.git_page/startup.md)
+* [로그](./.git_page/log.md)
+* [명령어](./.git_page/command.md)
+* [에코시스템](./.git_page/ecosystem.md)
+* [배포](./.git_page/deploy.md)
+* [주의사항](./.git_page/precautions.md)
 
 
 ## 프로세스 재시작 로직
@@ -98,8 +67,12 @@ module.exports = {
       script: './index.js', // 실행 스크립트
       instance: 0, // cpu 갯수 만큼 인스턴스 실행
       exec_mode: 'cluster', // 클러스터 모드
+      watch: ["src"], // 파일이 변경되면 자동을 재실행.
+      ignore_watch: ["node_modules", "src/static/img", ".git_page", ".vscode"], // 재시작 감시 제외 디렉토리
+      watch_potions: {
+        followSymlinks: false, // true 시 브라우저에서 링크파일의 경로를 확인가능. 보안상 false.
+      },
       wait_ready: true, // 프로세스 종료 후 wait 이벤트가 발생하기 까지 기다린다.
-      watch: true, // 파일이 변경되면 자동을 재실행.
       listen_timeout: 50000, // wait_ready 시 대기시간.
       kill_timeout: 5000, // SIGKILL 시 대기시간.
       env: { // 개발 환경시 적용될 설정 지정.
